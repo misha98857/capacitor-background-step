@@ -21,7 +21,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 public class StepCountBackgroundService extends Service {
 
   private static final String TAG = "BackgroundService";
-
   private StepCountHelper stepCountHelper;
 
   public static boolean isServiceRunning;
@@ -35,7 +34,6 @@ public class StepCountBackgroundService extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-
     Log.d(TAG, "onStartCommand called");
     Intent notificationIntent = new Intent(this, com.getcapacitor.BridgeActivity.class);
     PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -44,48 +42,38 @@ public class StepCountBackgroundService extends Service {
     Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
       .setContentTitle(getString(R.string.notification_title))
       .setContentText(getString(R.string.notification_text))
-//    .setSmallIcon(R.drawable.ic_launcher_background)
       .setSmallIcon(R.mipmap.ic_launcher_foreground)
       .setContentIntent(pendingIntent)
       .setAutoCancel(true)
-// 	.setPriority(NotificationCompat.PRIORITY_LOW)
-//    .setColor(getResources().getColor(R.color.colorPrimary))
       .build();
 
     startForeground(1, notification);
-
     return START_STICKY;
   }
 
-  public static void stopForegroundService(Context context, Activity activity) {
-    StepCountHelper stepCountHelper = new StepCountHelper(context);
-    stepCountHelper.stop();
-    StepCountBackgroundService service = new StepCountBackgroundService();
-    service.stopSelf();
-    isServiceRunning = false;
+  public static void stopForegroundService(Context context) {
+    Intent serviceIntent = new Intent(context, StepCountBackgroundService.class);
+    context.stopService(serviceIntent); // Stop the service using the context
   }
 
   @Override
   public void onCreate() {
     super.onCreate();
+    this.context = this; // Initialize the context
 
     AndroidThreeTen.init(this);
-
     int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION);
-    if(permission == PackageManager.PERMISSION_GRANTED) {
-//    Toast.makeText(this, "Service on create2", Toast.LENGTH_SHORT).show();
+    if (permission == PackageManager.PERMISSION_GRANTED) {
       this.stepCountHelper = new StepCountHelper(getApplicationContext());
       this.stepCountHelper.start();
       createNotificationChannel();
       isServiceRunning = true;
     }
-
   }
 
   @Override
   public IBinder onBind(Intent intent) {
-      // We don't provide binding, so return null
-      return null;
+    return null;
   }
 
   private void createNotificationChannel() {
@@ -103,14 +91,11 @@ public class StepCountBackgroundService extends Service {
 
   @Override
   public void onDestroy() {
-
+    if (stepCountHelper != null) {
+      stepCountHelper.stop(); // Stop the step count helper
+    }
     isServiceRunning = false;
     stopForeground(true);
-
-    Intent restartService = new Intent(this.context,RestartService.class);
-    sendBroadcast(restartService);
-
     super.onDestroy();
   }
-
 }
