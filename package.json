@@ -1,6 +1,6 @@
 {
   "name": "@misha98857/capacitor-background-step",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "capacitor plugin for counting step works in background",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -13,7 +13,7 @@
     "ios/Sources",
     "ios/Tests",
     "Package.swift",
-    "CapacitorBackgroundStep.podspec"
+    "Misha98857CapacitorBackgroundStep.podspec"
   ],
   "author": "thebeau",
   "license": "MIT",
