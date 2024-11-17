@@ -1,6 +1,6 @@
 {
   "name": "@misha98857/capacitor-background-step",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "capacitor plugin for counting step works in background",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",

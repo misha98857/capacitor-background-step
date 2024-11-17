@@ -56,20 +56,19 @@ public class StepCountBackgroundService extends Service {
     context.stopService(serviceIntent); // Stop the service using the context
   }
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    this.context = this; // Initialize the context
+    @Override
+    public void onCreate() {
+      super.onCreate();
+      this.context = this; // Initialize the context
 
-    AndroidThreeTen.init(this);
-    int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION);
-    if (permission == PackageManager.PERMISSION_GRANTED) {
-      this.stepCountHelper = new StepCountHelper(getApplicationContext());
-      this.stepCountHelper.start();
-      createNotificationChannel();
-      isServiceRunning = true;
+      AndroidThreeTen.init(this);
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+        this.stepCountHelper = new StepCountHelper(getApplicationContext());
+        this.stepCountHelper.start();
+        createNotificationChannel();
+        isServiceRunning = true;
+      }
     }
-  }
 
   @Override
   public IBinder onBind(Intent intent) {
