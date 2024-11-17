@@ -124,7 +124,8 @@ public class BackgroundstepPlugin extends Plugin {
 
     @PluginMethod
     public void checkAndRequestPermission(PluginCall call) {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q ||
+            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
             JSObject response = new JSObject();
             response.put("granted", true);
 
